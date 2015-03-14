@@ -31,9 +31,13 @@ func cmdList(args *docopt.Args, client *tuf.Client) error {
 	}
 	w := tabwriter.NewWriter(os.Stdout, 1, 2, 2, ' ', 0)
 	defer w.Flush()
-	fmt.Fprintln(w, "PATH\tSIZE")
+	fmt.Fprintln(w, "PATH\tSIZE\tCUSTOM")
 	for path, meta := range targets {
-		fmt.Fprintf(w, "%s\t%s\n", path, humanize.Bytes(uint64(meta.Length)))
+		custom := ""
+		if meta.Custom != nil {
+			custom = string(*meta.Custom)
+		}
+		fmt.Fprintf(w, "%s\t%s\t%s\n", path, humanize.Bytes(uint64(meta.Length)), custom)
 	}
 	return nil
 }
